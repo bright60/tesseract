@@ -2,6 +2,12 @@ Note that this is a text-only and possibly out-of-date version of the
 wiki ReadMe, which is located at:
  http://code.google.com/p/tesseract-ocr/wiki/ReadMe
 
+==
+Major chagned to patch on 3.02.02: on TESSDATA_PREFIX issue: ccutil/mainblk.cpp
+
+If there is no TESSDATA_PREFIX setting in evniornment, and no setDataPath() in program, then program will use tessdata in current directory.
+==
+
 Introduction
 ============
 
