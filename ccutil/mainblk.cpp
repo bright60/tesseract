@@ -48,33 +48,32 @@ void CCUtil::main_setup(                 /*main demo program */
                ) {
   imagebasename = basename;      /*name of image */
 
-  // TESSDATA_PREFIX Environment variable overrules everything.
-  // Compiled in -DTESSDATA_PREFIX is next.
-  // An actual value of argv0 is used if not NULL, otherwise current directory.
-  if (!getenv("TESSDATA_PREFIX")) {
+  if (argv0 != NULL) {
+    datadir = argv0;
+  } else {
+    if (getenv("TESSDATA_PREFIX")) {
+      datadir = getenv("TESSDATA_PREFIX");
+    } else {
 #ifdef TESSDATA_PREFIX
 #define _STR(a) #a
 #define _XSTR(a) _STR(a)
     datadir = _XSTR(TESSDATA_PREFIX);
 #undef _XSTR
 #undef _STR
-#else
-    if (argv0 != NULL) {
-      datadir = argv0;
-      // Remove tessdata from the end if present, as we will add it back!
-      int length = datadir.length();
-      if (length >= 8 && strcmp(&datadir[length - 8], "tessdata") == 0)
-        datadir.truncate_at(length - 8);
-      else if (length >= 9 && strcmp(&datadir[length - 9], "tessdata/") == 0)
-        datadir.truncate_at(length - 9);
-      if (datadir.length() == 0)
-        datadir = "./";
-    } else {
-      datadir = "./";
-    }
 #endif
+    }
+  }
+
+  // datadir may still be empty:
+  if (datadir.length() == 0) {
+    datadir = "./";
   } else {
-    datadir = getenv("TESSDATA_PREFIX");
+    // Remove tessdata from the end if present, as we will add it back!
+    int length = datadir.length();
+    if (length >= 8 && strcmp(&datadir[length - 8], "tessdata") == 0)
+      datadir.truncate_at(length - 8);
+    else if (length >= 9 && strcmp(&datadir[length - 9], "tessdata/") == 0)
+      datadir.truncate_at(length - 9);
   }
 
   // check for missing directory separator
